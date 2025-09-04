@@ -5,6 +5,7 @@ terraform {
   }
 }
 
+
 resource "kubernetes_manifest" "argocd_root" {
   manifest = yamldecode(templatefile("${path.module}/root.yaml", {
     cluster_name   = var.cluster_name
