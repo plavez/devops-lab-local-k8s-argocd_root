@@ -2,13 +2,13 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name     : root
-  namespace: "argocd-${cluster_name}"
+  namespace: argocd-${cluster_name}
   finalizers:
   - resources-finalizer.argocd.argoproj.io
 spec:
   destination:
     name     : in-cluster
-    namespace: "argocd-${cluster_name}"
+    namespace: argocd-${cluster_name}
   source:
     repoURL       : "${repoURL}"
     path          : "${path}"
@@ -18,3 +18,48 @@ spec:
     automated:
       prune   : true
       selfHeal: true
+
+# apiVersion: argoproj.io/v1alpha1
+# kind: Application
+# metadata:
+#   name     : root
+#   namespace: "argocd-${cluster_name}"
+#   finalizers:
+#   - resources-finalizer.argocd.argoproj.io
+# spec:
+#   destination:
+#     name     : in-cluster
+#     namespace: "argocd-${cluster_name}"
+#   source:
+#     repoURL       : "${repoURL}"
+#     path          : "${path}"
+#     targetRevision: "${targetRevision}"
+#   project: default
+#   syncPolicy:
+#     automated:
+#       prune   : true
+#       selfHeal: true
+
+
+# apiVersion: argoproj.io/v1alpha1
+# kind: Application
+# metadata:
+#   name: root-${cluster_name} # root-dev / root-prod
+#   namespace: argocd # CRD ArgoCD всегда в ns argocd
+#   labels:
+#     env: ${cluster_name}
+# spec:
+#   project: default
+#   source:
+#     repoURL: ${repoURL} # https://github.com/plavez/argocd.git или ssh
+#     targetRevision: ${targetRevision}
+#     path: ${path} # dev/applications | prod/applications
+#   destination:
+#     server: https://kubernetes.default.svc # “деплой в этот же кластер”
+#     namespace: argocd # для app-of-apps удобно оставлять argocd
+#   syncPolicy:
+#     automated:
+#       prune: true
+#       selfHeal: true
+#     syncOptions:
+#       - CreateNamespace=true
